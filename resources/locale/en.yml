@@ -1,0 +1,11 @@
+flamarkt-payment-stripe:
+    backoffice:
+        settings:
+            secretKey: Secret Key
+            publishableKey: Publishable Key
+            hostedCheckout: Stripe-Hosted Checkout
+            hostedCheckoutHelp: Use Stripe's hosted checkout page.
+            alwaysRedirect: Always finish order with redirect
+            alwaysRedirectHelp: With self-hosted checkout, always redirect instead of using in-page Stripe confirmation.
+            cardOnly: Card only
+            cardOnlyHelp: With self-hosted checkout, uses minimal card interface and offer 3D-secure in an iframe instead of leaving the website.

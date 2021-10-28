@@ -1,0 +1,49 @@
+{
+    "name": "flamarkt/payment-stripe",
+    "description": "Stripe payment method.",
+    "keywords": [
+        "flarum",
+        "flamarkt",
+        "marketplace",
+        "ecommerce",
+        "payment",
+        "stripe"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "require": {
+        "flarum/core": "^1.0",
+        "flamarkt/core": "^0.1.0",
+        "stripe/stripe-php": "^7.97"
+    },
+    "authors": [
+        {
+            "name": "Flamarkt",
+            "homepage": "https://flamarkt.org/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flamarkt/payment-stripe/issues",
+        "source": "https://github.com/flamarkt/payment-stripe"
+    },
+    "autoload": {
+        "psr-4": {
+            "Flamarkt\\StripePayment\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Stripe Payment",
+            "category": "flamarkt",
+            "icon": {
+                "name": "fab fa-stripe",
+                "backgroundColor": "#266a13",
+                "color": "#fff"
+            }
+        },
+        "flamarkt-backoffice": {
+            "showInBackoffice": true,
+            "hideFromAdmin": true
+        }
+    }
+}
