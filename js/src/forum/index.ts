@@ -1,8 +1,9 @@
 import {PaymentIntentResult, StripeCardElement, StripeError} from '@stripe/stripe-js';
+import app from 'flarum/forum/app';
 import {extend, override} from 'flarum/common/extend';
 import CartLayout from 'flamarkt/core/forum/layouts/CartLayout';
-import ItemList from 'flarum/common/utils/ItemList';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
+import Order from 'flamarkt/core/common/models/Order';
 import {forum} from './compat';
 import IframeModal from './components/IframeModal';
 import loadStripe from './loadStripe';
@@ -12,7 +13,7 @@ export {
 };
 
 app.initializers.add('flamarkt-payment-stripe', () => {
-    extend(CartLayout.prototype, 'oninit', function (this: CartLayout) {
+    extend(CartLayout.prototype, 'oninit', function () {
         this.payWithStripe = false;
         this.stripeClientSecret = null;
         this.stripePaymentIntentSucceeded = false;
@@ -20,7 +21,7 @@ app.initializers.add('flamarkt-payment-stripe', () => {
         this.stripePaymentElement = null;
     });
 
-    extend(CartLayout.prototype, 'oncreate', function (this: CartLayout) {
+    extend(CartLayout.prototype, 'oncreate', function () {
         this.stripeMessageEventListener = async (event: MessageEvent) => {
             if (event.data === '3DS-authentication-complete' && this.stripeClientSecret) {
                 app.modal.close();
@@ -35,11 +36,11 @@ app.initializers.add('flamarkt-payment-stripe', () => {
     });
 
 
-    extend(CartLayout.prototype, 'onremove', function (this: CartLayout) {
+    extend(CartLayout.prototype, 'onremove', function () {
         window.removeEventListener('message', this.stripeMessageEventListener);
     });
 
-    extend(CartLayout.prototype, 'sectionPayment', function (this: CartLayout, items: ItemList) {
+    extend(CartLayout.prototype, 'sectionPayment', function (items) {
         items.add('stripe', m('.Form-group', [
             m('label', [
                 m('input', {
@@ -49,7 +50,7 @@ app.initializers.add('flamarkt-payment-stripe', () => {
                         this.payWithStripe = !this.payWithStripe;
 
                         if (this.payWithStripe && !this.stripeClientSecret && !app.forum.attribute('flamarktStripeHostedCheckout')) {
-                            app.request({
+                            app.request<any>({
                                 method: 'GET',
                                 url: app.forum.attribute('apiUrl') + '/flamarkt/stripe-payment-intent',
                             }).then(async response => {
@@ -78,7 +79,7 @@ app.initializers.add('flamarkt-payment-stripe', () => {
         ]));
     });
 
-    extend(CartLayout.prototype, 'data', function (this: CartLayout, data: any) {
+    extend(CartLayout.prototype, 'data', function (data: any) {
         data.payWithStripe = this.payWithStripe;
     });
 
@@ -97,8 +98,8 @@ app.initializers.add('flamarkt-payment-stripe', () => {
             this.submitting = true;
             m.redraw();
 
-            app.store.createRecord('flamarkt-orders')
-                .save(this.data())
+            app.store.createRecord<Order>('flamarkt-orders')
+                .save(this.data() as any)
                 .then(this.afterSuccessfulSubmit.bind(this))
                 .catch(this.afterFailedSubmit.bind(this));
 
@@ -129,7 +130,7 @@ app.initializers.add('flamarkt-payment-stripe', () => {
         m.redraw();
     }
 
-    override(CartLayout.prototype, 'onsubmit', function (this: CartLayout, original: any, event: Event) {
+    override(CartLayout.prototype, 'onsubmit', function (original: any, event: Event) {
         if (this.payWithStripe && app.forum.attribute('flamarktStripeHostedCheckout')) {
             event.preventDefault();
 
