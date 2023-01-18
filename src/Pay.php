@@ -13,7 +13,7 @@ class Pay
 {
     public function __invoke(OrderBuilder $builder, Order $order, User $actor, Cart $cart, array $data)
     {
-        $checkoutId = Arr::get($data, 'data.attributes.payWithStripeCheckout');
+        $checkoutId = Arr::get($data, 'attributes.payWithStripeCheckout');
 
         if ($checkoutId) {
             $session = \Stripe\Checkout\Session::retrieve($checkoutId);
@@ -25,7 +25,7 @@ class Pay
             }
 
             $builder->addPayment('stripe-session', $session->amount_total, $session->id);
-        } else if (Arr::get($data, 'data.attributes.payWithStripe')) {
+        } else if (Arr::get($data, 'attributes.payWithStripe')) {
             $intent = CartUtil::retrieveOrCreatePaymentIntent($cart);
 
             // TODO: accept "processing" as a valid status?
