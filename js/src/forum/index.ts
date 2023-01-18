@@ -2,6 +2,7 @@ import {PaymentIntentResult, StripeCardElement, StripeError} from '@stripe/strip
 import app from 'flarum/forum/app';
 import {extend, override} from 'flarum/common/extend';
 import CartLayout from 'flamarkt/core/forum/layouts/CartLayout';
+import OrderFactPayment from 'flamarkt/core/forum/components/OrderFactPayment';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Order from 'flamarkt/core/common/models/Order';
 import {forum} from './compat';
@@ -65,7 +66,7 @@ app.initializers.add('flamarkt-payment-stripe', () => {
                             });
                         }
                     },
-                    disabled: this.submitting,
+                    disabled: this.submitting || !this.attrs.cart!.canCheckout(),
                 }),
                 ' Pay with Stripe',
             ]),
@@ -190,5 +191,14 @@ app.initializers.add('flamarkt-payment-stripe', () => {
 
             this.stripeCompleteIntent(response);
         })();
+    });
+
+    override(OrderFactPayment.prototype, 'label', function (original) {
+        if (this.attrs.payment.method() === 'stripe') {
+            // TODO: option to use icon
+            return 'Stripe';
+        }
+
+        return original();
     });
 });
