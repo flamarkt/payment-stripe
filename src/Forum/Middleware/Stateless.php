@@ -16,11 +16,10 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class Stateless implements MiddlewareInterface
 {
-    protected $cookie;
-
-    public function __construct(CookieFactory $cookie)
+    public function __construct(
+        protected CookieFactory $cookie
+    )
     {
-        $this->cookie = $cookie;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface

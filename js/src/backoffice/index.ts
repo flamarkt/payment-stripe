@@ -1,3 +1,5 @@
+import app from 'flamarkt/backoffice/backoffice/app';
+
 app.initializers.add('flamarkt-payment-stripe', () => {
     app.extensionData.for('flamarkt-payment-stripe')
         .registerSetting({
@@ -27,5 +29,23 @@ app.initializers.add('flamarkt-payment-stripe', () => {
             setting: 'flamarkt-payment-stripe.cardOnly',
             label: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.cardOnly'),
             help: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.cardOnlyHelp'),
+        })
+        .registerSetting({
+            type: 'switch',
+            setting: 'flamarkt-payment-stripe.captureLater',
+            label: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.captureLater'),
+            help: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.captureLaterHelp'),
+        })
+        .registerSetting({
+            type: 'switch',
+            setting: 'flamarkt-payment-stripe.forceLocaleAuto',
+            label: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.forceLocaleAuto'),
+            help: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.forceLocaleAutoHelp'),
+        })
+        .registerSetting({
+            type: 'switch',
+            setting: 'flamarkt-payment-stripe.applePayDomainAssociation',
+            label: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.applePayDomainAssociation'),
+            help: app.translator.trans('flamarkt-payment-stripe.backoffice.settings.applePayDomainAssociationHelp'),
         });
 });

@@ -6,6 +6,54 @@ flamarkt-payment-stripe:
             hostedCheckout: Stripe-Hosted Checkout
             hostedCheckoutHelp: Use Stripe's hosted checkout page.
             alwaysRedirect: Always finish order with redirect
-            alwaysRedirectHelp: With self-hosted checkout, always redirect instead of using in-page Stripe confirmation.
+            alwaysRedirectHelp: >
+                With embedded checkout, always redirect instead of using in-page Stripe confirmation.
+                This most likely offers no benefit and only increases the time it takes to complete the transaction.
             cardOnly: Card only
-            cardOnlyHelp: With self-hosted checkout, uses minimal card interface and offer 3D-secure in an iframe instead of leaving the website.
+            cardOnlyHelp: >
+                With embedded checkout, uses minimal card interface and offer 3D-secure in an iframe instead of leaving the website.
+                This feature is partially implemented, because even when using the mode where payment method can be chosen, card is still the only option offered.
+            captureLater: Capture later
+            captureLaterHelp: >
+                Sets <code>capture_method</code> to <code>manual</code>.
+                Order will be considered paid on a successful hold.
+                The order editor will include a button to manually capture the funds later.
+                There is currently no feedback if you let the hold expire.
+            forceLocaleAuto: Force auto locale
+            forceLocaleAutoHelp: >
+                By default the current forum language will be set as Stripe <code>locale</code>.
+                Use this option to always use <code>auto</code> instead.
+                This might be required if your forum locale is not supported by Stripe.
+                Currently only affects Stripe's hosted checkout.
+            applePayDomainAssociation: Enable Apple Developer
+            applePayDomainAssociationHelp: >
+                When enabled, the extension takes care of setting up the <code>.well-known</code> file for Apple Pay Stripe Association.
+                See <a>Stripe documentation</a> for the next steps in Stripe dashboard.
+                Only necessary for embedded checkout.
+    forum:
+        cart:
+            payment:
+                instantOrCard: Or pay with card
+            paymentRequest:
+                total: Total
+            submit:
+                hosted: Checkout with Stripe
+                hostedLoading: Redirecting...
+                embedded: Pay with card
+                embeddedLoading: Processing...
+            alert:
+                stripeCancelled: Checkout cancelled. You may try again.
+                stripeConfirmationError: An unexpected Stripe payment confirmation error occurred
+        order:
+            paymentLabel: Stripe
+            paymentLabelHold: Stripe (hold)
+            paymentLabelRelease: Stripe (hold released)
+    api:
+        hostedCheckout:
+            singleItem: Flamarkt Order
+        pay:
+            hostedCheckout:
+                invalidLink: Invalid Stripe Checkout session ID for this cart
+                invalidStatus: Invalid or cancelled Stripe Checkout session
+            intent:
+                invalidStatus: Invalid or cancelled Stripe payment intent
