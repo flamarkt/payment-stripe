@@ -75,12 +75,19 @@ app.initializers.add('flamarkt-payment-stripe', () => {
     CartLayout.prototype.stripeSubmitEmbeddedCheckout = async function (event: Event): Promise<void> {
         event.preventDefault();
 
-        // Do this at the very beginning, so it doesn't end up in the asynchronous part
+        // Do this at the very beginning, so it doesn't end up in the asynchronous part (no additional redraw needed)
         this.stripeSubmitting = 'embedded';
 
-        await this.stripeRetrieveClientSecret(true);
+        try {
+            await this.stripeRetrieveClientSecret(true);
+        } catch (error) {
+            // In case there's an error, we want to stop right here. Message is already displayed by stripeRetrieveClientSecret()
+            this.stripeSubmitting = null;
+            m.redraw();
+            throw error;
+        }
 
-        // stripeRetrieveClientSecret() takes care of showing an error if necessary
+        // If somehow there is still no secret even without stripeRetrieveClientSecret() throwing an error, cancel
         if (!this.stripeClientSecret) {
             this.stripeSubmitting = null;
             m.redraw();
