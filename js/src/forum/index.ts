@@ -444,5 +444,4 @@ app.initializers.add('flamarkt-payment-stripe', () => {
 
         return original();
     });
-})
-;
+});

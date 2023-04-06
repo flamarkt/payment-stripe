@@ -3,6 +3,12 @@ import {extend} from 'flarum/common/extend';
 import PaymentList from 'flamarkt/core/backoffice/components/PaymentList';
 import Order from 'flamarkt/core/common/models/Order';
 import Button from 'flarum/common/components/Button';
+import {backoffice} from './compat';
+import CaptureFundsModal from './components/CaptureFundsModal';
+
+export {
+    backoffice,
+};
 
 app.initializers.add('flamarkt-payment-stripe', () => {
     app.extensionData.for('flamarkt-payment-stripe')
@@ -69,26 +75,9 @@ app.initializers.add('flamarkt-payment-stripe', () => {
                         return;
                     }
 
-                    const factor = Math.pow(10, app.forum.attribute('priceDecimals'));
-
-                    // TODO: use modal with price input
-                    const userAmount = prompt('Amount to capture', order.priceTotal() / factor);
-
-                    if (userAmount === '' || userAmount === null) {
-                        return;
-                    }
-
-                    app.request({
-                        method: 'POST',
-                        url: app.forum.attribute('apiUrl') + '/flamarkt/stripe-capture',
-                        body: {
-                            paymentIntentId: payment.identifier(),
-                            amount: Math.round(userAmount * factor),
-                        },
-                    }).then(() => {
-                        app.alerts.show({
-                            type: 'success',
-                        }, 'Funds captured. Refresh page to see.');
+                    app.modal.show(CaptureFundsModal, {
+                        order,
+                        payment,
                     });
                 },
             }, 'Capture funds'));
