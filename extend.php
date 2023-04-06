@@ -16,6 +16,7 @@ return [
     new Extend\Locales(__DIR__ . '/resources/locale'),
 
     (new Extend\Routes('api'))
+        ->post('/flamarkt/stripe-capture', 'flamarkt.stripe.capture', Api\Controller\CaptureFundsController::class)
         ->post('/flamarkt/stripe-hosted-checkout', 'flamarkt.stripe.checkout', Api\Controller\StripeHostedCheckout::class)
         ->post('/flamarkt/stripe-payment-intent', 'flamarkt.stripe.payment-intent', Api\Controller\StripePaymentIntent::class),
 
